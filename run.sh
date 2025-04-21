@@ -1,4 +1,4 @@
-if netstat -tuln | grep -q ":51000 "; then
+if ss -tuln | grep -q ":51000 "; then
     echo "❌ Error: Port 51000 is already in use!"
     echo "Please stop any running CLIP server or use a different port."
     exit 1
@@ -41,12 +41,13 @@ LOCAL_ADDR=$(grep "Local" server_output.log | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\
 PRIVATE_ADDR=$(grep "Private" server_output.log | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}:[0-9]\+')
 PUBLIC_ADDR=$(grep "Public" server_output.log | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}:[0-9]\+')
 
-echo "Debug - Extracted addresses:"
-echo "PROTOCOL: $PROTOCOL"
-echo "LOCAL_ADDR: $LOCAL_ADDR"
-echo "PRIVATE_ADDR: $PRIVATE_ADDR" 
-echo "PUBLIC_ADDR: $PUBLIC_ADDR"
-
+echo " "
+echo "Extracted attrs:"
+echo "    PROTOCOL: $PROTOCOL"
+echo "    LOCAL_ADDR: $LOCAL_ADDR"
+echo "    PRIVATE_ADDR: $PRIVATE_ADDR" 
+echo "    PUBLIC_ADDR: $PUBLIC_ADDR"
+echo " "
 echo "✅ CLIP server started successfully"
 echo "Running connection test..."
 
