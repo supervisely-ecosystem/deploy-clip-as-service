@@ -4,6 +4,7 @@ with:
   port: 51000
   protocol: 'http'
   cors: True
+  no_dashboard: True
 executors:
   - name: clip_t
     uses:
