@@ -1,1 +1,1 @@
-python -m clip_server &
+python -m clip_server

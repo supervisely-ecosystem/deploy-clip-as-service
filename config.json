@@ -1,22 +1,22 @@
 {
-  "type": "app",
-  "version": "2.0.0",
-  "name": "Deploy CLIP as a service",
-  "description": "",
-  "entrypoint": "sh run.sh",
-  "docker_image": "supervisely/deploy-cas:0.1.0",
-  "port": 51000,
-  "categories": [
-    "neural network",
-    "images",
-    "object detection",
-    "semantic segmentation",
-    "instance segmentation",
-    "metric learning",
-    "statistics"
-  ],
-  "instance_version": "6.12.44",
-  "need_gpu": true,
-  "gpu": "preferred",
-  "community_agent": false
+	"type": "app",
+	"version": "2.0.0",
+	"name": "Deploy CLIP as a service",
+	"description": "",
+	"entrypoint": "sh run.sh",
+	"docker_image": "supervisely/deploy-cas:0.1.0",
+	"port": 51000,
+	"categories": [
+		"neural network",
+		"images",
+		"object detection",
+		"semantic segmentation",
+		"instance segmentation",
+		"metric learning",
+		"statistics"
+	],
+	"instance_version": "6.12.44",
+	"need_gpu": true,
+	"gpu": "preferred",
+	"community_agent": false
 }
