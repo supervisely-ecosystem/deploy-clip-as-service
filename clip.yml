@@ -1,7 +1,7 @@
 jtype: Flow
 version: '1'
 with:
-  port: 8000
+  port: 51000
   protocol: 'http'
   cors: True
 executors:
