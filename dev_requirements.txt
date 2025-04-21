@@ -1,0 +1,2 @@
+clip-server==0.8.3
+clip-client==0.8.3
