@@ -3,9 +3,9 @@
 	"version": "2.0.0",
 	"name": "Deploy CLIP as a service",
 	"description": "",
-	"entrypoint": "sh run.sh",
+	"entrypoint": "python -m clip_server clip.yml",
 	"docker_image": "supervisely/deploy-cas:0.1.0",
-	"port": 51000,
+	"port": 8000,
 	"categories": [
 		"neural network",
 		"images",
