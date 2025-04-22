@@ -1,23 +1,25 @@
 {
 	"type": "app",
 	"version": "2.0.0",
-	"name": "Deploy CLIP as a service",
-	"description": "",
+	"name": "CLIP Service",
+	"description": "Deploy CLIP model as a service",
 	"entrypoint": "python -m clip_server clip.yml",
 	"docker_image": "supervisely/deploy-cas:0.1.0",
 	"port": 8000,
 	"categories": [
 		"neural network",
 		"images",
-		"object detection",
-		"semantic segmentation",
-		"instance segmentation",
 		"metric learning",
-		"statistics"
+		"multimodal",
+		"text-image embedding",
+		"zero-shot learning",
+		"vision-language"
 	],
 	"headless": true,
 	"instance_version": "6.12.44",
 	"need_gpu": true,
 	"gpu": "preferred",
-	"community_agent": false
+	"community_agent": false,
+	"restart_policy": "on_error",
+	"task_location": "application_sessions"
 }
