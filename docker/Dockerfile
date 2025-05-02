@@ -1,4 +1,4 @@
-FROM supervisely/base-py-sdk:6.73.349
+FROM supervisely/base-py-sdk:6.73.350
 
 RUN apt-get update && apt-get install -y wget
 
