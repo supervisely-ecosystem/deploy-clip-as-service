@@ -16,6 +16,8 @@
 		"vision-language"
 	],
 	"headless": true,
+    "icon": "https://github.com/supervisely-ecosystem/deploy-clip-as-service/releases/download/v0.1.0/icon.jpg",
+    "poster": "https://github.com/supervisely-ecosystem/deploy-clip-as-service/releases/download/v0.1.0/poster.jpg",
 	"instance_version": "6.12.44",
 	"need_gpu": true,
 	"gpu": "preferred",
