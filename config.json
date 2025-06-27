@@ -13,7 +13,8 @@
 		"multimodal",
 		"text-image embedding",
 		"zero-shot learning",
-		"vision-language"
+		"vision-language",
+        "ai search"
 	],
 	"headless": true,
     "icon": "https://github.com/supervisely-ecosystem/deploy-clip-as-service/releases/download/v0.1.0/icon.jpg",
