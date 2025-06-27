@@ -1,6 +1,6 @@
 <div align="center" markdown>
 
-<img src="https://github.com/supervisely-ecosystem/deploy-clip-as-service/releases/download/v0.1.0/poster.jpg">
+<img src="https://github.com/supervisely-ecosystem/embeddings-generator/releases/download/v0.1.0/clip_poster.jpg">
 
 # CLIP as Service
 
