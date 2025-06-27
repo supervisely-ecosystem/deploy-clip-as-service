@@ -18,6 +18,7 @@
 	],
 	"headless": true,
     "icon": "https://github.com/supervisely-ecosystem/embeddings-generator/releases/download/v0.1.0/clip_icon.jpg",
+    "icon_cover": true,
     "poster": "https://github.com/supervisely-ecosystem/embeddings-generator/releases/download/v0.1.0/clip_poster.jpg",
 	"instance_version": "6.12.44",
 	"need_gpu": true,
