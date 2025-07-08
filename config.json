@@ -3,7 +3,7 @@
 	"version": "2.0.0",
 	"name": "CLIP Service",
 	"description": "Deploy CLIP (Contrastive Language-Image Pre-Training) model as a microservice for generating high-quality image and text embeddings",
-	"entrypoint": "JINA_LOG_LEVEL=WARNING python -m clip_server clip.yml",
+	"entrypoint": "python -m clip_server clip.yml 2>&1 | grep -v '^$'",
 	"docker_image": "supervisely/deploy-cas:0.1.0",
 	"port": 8000,
 	"categories": ["system"],
