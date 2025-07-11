@@ -2,21 +2,46 @@ import os
 import sys
 import site
 
+
 def find_helper_py():
     """Find the helper.py file in installed packages"""
+    # First, try the specific known location
+    specific_path = "/usr/local/lib/python3.8/dist-packages/docarray/document/mixins/helper.py"
+    if os.path.exists(specific_path):
+        return specific_path
+
+    # Try standard site-packages directories
     for site_dir in site.getsitepackages():
-        helper_path = os.path.join(site_dir, 'docarray', 'document', 'mixins', 'helper.py')
+        helper_path = os.path.join(site_dir, "docarray", "document", "mixins", "helper.py")
         if os.path.exists(helper_path):
             return helper_path
-    
+
+    # Try common system-wide installation paths
+    system_paths = [
+        "/usr/local/lib/python3.8/dist-packages",
+        "/usr/lib/python3.8/dist-packages",
+        "/usr/local/lib/python3.8/site-packages",
+        "/usr/lib/python3.8/site-packages",
+    ]
+
+    for base_path in system_paths:
+        helper_path = os.path.join(base_path, "docarray", "document", "mixins", "helper.py")
+        if os.path.exists(helper_path):
+            return helper_path
+
     # Fallback for virtual environments
-    import docarray
-    docarray_path = os.path.dirname(docarray.__file__)
-    helper_path = os.path.join(docarray_path, 'document', 'mixins', 'helper.py')
-    if os.path.exists(helper_path):
-        return helper_path
-    
+    try:
+        import docarray
+
+        docarray_path = os.path.dirname(docarray.__file__)
+        helper_path = os.path.join(docarray_path, "document", "mixins", "helper.py")
+        if os.path.exists(helper_path):
+            return helper_path
+    except ImportError:
+        pass
+
     return None
+
 
 def patch_helper():
     """Apply patch to helper.py"""
@@ -24,13 +49,13 @@ def patch_helper():
     if not helper_path:
         print("helper.py not found!")
         return
-    
+
     print(f"Patching {helper_path}")
-    
+
     # Read the original file
-    with open(helper_path, 'r') as f:
+    with open(helper_path, "r") as f:
         content = f.read()
-    
+
     # Add imports at the beginning of the file
     imports_to_add = """
 import json
@@ -38,12 +63,12 @@ import logging
 import base64
 from datetime import datetime
 """
-    
-    if 'import json' not in content:
-        content = content.replace('import os', f'import os{imports_to_add}')
-    
+
+    if "import json" not in content:
+        content = content.replace("import os", f"import os{imports_to_add}")
+
     # Configure logging
-    logging_setup = '''
+    logging_setup = """
 # Logging setup for debugging
 logging.basicConfig(
     level=logging.INFO,
@@ -54,11 +79,14 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
-'''
-    
-    if 'logger = logging.getLogger' not in content:
-        content = content.replace('from contextlib import nullcontext', f'from contextlib import nullcontext{logging_setup}')
-    
+"""
+
+    if "logger = logging.getLogger" not in content:
+        content = content.replace(
+            "from contextlib import nullcontext",
+            f"from contextlib import nullcontext{logging_setup}",
+        )
+
     # Replace the _uri_to_blob function
     new_function = '''def _uri_to_blob(uri: str, **kwargs) -> bytes:
     """Convert uri to blob
@@ -149,22 +177,24 @@ logger = logging.getLogger(__name__)
     else:
         logger.error(f"URI not found: {uri}")
         raise FileNotFoundError(f'`{uri}` is not a URL or a valid local path')'''
-    
-    # Replace the function in the content
+
+    # Заменяем функцию в содержимом
     import re
-    pattern = r'def _uri_to_blob\(uri: str, \*\*kwargs\) -> bytes:.*?raise FileNotFoundError\(f\'`\{uri\}` is not a URL or a valid local path\'\)'
+
+    pattern = r"def _uri_to_blob\(uri: str, \*\*kwargs\) -> bytes:.*?raise FileNotFoundError\(f\'`\{uri\}` is not a URL or a valid local path\'\)"
     content = re.sub(pattern, new_function, content, flags=re.DOTALL)
-    
-    # Create a backup
-    backup_path = helper_path + '.backup'
-    with open(backup_path, 'w') as f:
+
+    # Создаем резервную копию
+    backup_path = helper_path + ".backup"
+    with open(backup_path, "w") as f:
         f.write(content)
-    
-    # Write the modified file
-    with open(helper_path, 'w') as f:
+
+    # Записываем измененный файл
+    with open(helper_path, "w") as f:
         f.write(content)
-    
-    print(f"Patch applied successfully. Backup: {backup_path}")
+
+    print(f"Патч применен успешно. Резервная копия: {backup_path}")
+
 
 if __name__ == "__main__":
     patch_helper()
