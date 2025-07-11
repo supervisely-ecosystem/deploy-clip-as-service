@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  clip-test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    volumes:
+      - ./debug_logs:/debug_logs
+    environment:
+      - JINA_HIDE_SURVEY=1
