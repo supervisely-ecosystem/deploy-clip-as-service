@@ -1,7 +1,7 @@
 import subprocess
 
 proc = subprocess.Popen(
-    ["python", "-m", "clip_server", "clip.yml"],
+    ["python", "debug_clip_server.py"],
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT,
     text=True,
@@ -13,7 +13,7 @@ for line in proc.stdout:
     # Remove empty lines
     if not s:
         continue
-
+    
     log_levels = ["INFO", "DEBUG", "WARNING", "ERROR"]
 
     # Check if the message is not empty after the log level
