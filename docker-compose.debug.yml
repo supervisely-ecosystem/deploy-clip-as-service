@@ -1,5 +1,5 @@
 services:
-  embeddings-generator:
+  deploy-clip-as-service:
     image: supervisely/deploy-cas:debug
     build:
       context: .
@@ -13,5 +13,10 @@ services:
       - 5678:5678
     volumes:
       - .:/app
+      - ./.venv:/app/.venv
+    environment:
+      - PATH=/app/.venv/bin:$PATH
+      - VIRTUAL_ENV=/app/.venv
+      - PYTHONPATH=/app/.venv/lib/python3.10/site-packages
     working_dir: /app
-    command: python run_debug.py
+    command: python debug_clip_server.py
