@@ -5,7 +5,13 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.test
+    ports:
+      - "8000:8000"
     volumes:
-      - ./debug_logs:/debug_logs
+      - ./debug_logs:/app/repo/debug_logs
+      - .:/app
     environment:
       - JINA_HIDE_SURVEY=1
+      - NO_VERSION_CHECK=1
+    working_dir: /app
+    command: python run.py

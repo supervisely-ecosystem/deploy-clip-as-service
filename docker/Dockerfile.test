@@ -10,7 +10,7 @@ COPY dev_requirements.txt dev_requirements.txt
 
 RUN pip install --no-cache-dir -r dev_requirements.txt
 
-RUN mkdir -p /debug_logs
+RUN mkdir -p /app/repo/debug_logs
 
 COPY patch_helper.py /tmp/patch_helper.py
 
@@ -18,4 +18,4 @@ RUN python /tmp/patch_helper.py
 
 ENV JINA_HIDE_SURVEY=1
 
-VOLUME ["/debug_logs"]
+VOLUME ["/app/repo/debug_logs"]

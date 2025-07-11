@@ -59,7 +59,6 @@ def patch_helper():
     # Add imports at the beginning of the file
     imports_to_add = """
 import json
-import logging
 import base64
 from datetime import datetime
 """
@@ -67,24 +66,21 @@ from datetime import datetime
     if "import json" not in content:
         content = content.replace("import os", f"import os{imports_to_add}")
 
-    # Configure logging
-    logging_setup = """
-# Logging setup for debugging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('/debug_logs/uri_to_blob.log'),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+    # Add supervisely logger setup
+    logger_setup = """
+# Supervisely logger setup for debugging
+try:
+    import supervisely as sly
+    logger = sly.logger
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)
 """
 
-    if "logger = logging.getLogger" not in content:
+    if "logger = sly.logger" not in content and "logger = logging.getLogger" not in content:
         content = content.replace(
             "from contextlib import nullcontext",
-            f"from contextlib import nullcontext{logging_setup}",
+            f"from contextlib import nullcontext{logger_setup}",
         )
 
     # Replace the _uri_to_blob function
@@ -124,8 +120,9 @@ logger = logging.getLogger(__name__)
                     'data_preview': data[:100].hex() if len(data) > 100 else data.hex()
                 })
                 
-                # Save to JSON file
-                log_filename = f"/debug_logs/uri_blob_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}.json"
+                # Save to JSON file in /app directory
+                os.makedirs('/app/repo/debug_logs', exist_ok=True)
+                log_filename = f"/app/repo/debug_logs/uri_blob_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}.json"
                 try:
                     with open(log_filename, 'w') as log_file:
                         json.dump(response_info, log_file, indent=2)
@@ -160,8 +157,9 @@ logger = logging.getLogger(__name__)
                     'data_preview': data[:100].hex() if len(data) > 100 else data.hex()
                 }
                 
-                # Save to JSON file
-                log_filename = f"/debug_logs/local_file_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}.json"
+                # Save to JSON file in /app directory
+                os.makedirs('/app/repo/debug_logs', exist_ok=True)
+                log_filename = f"/app/repo/debug_logs/local_file_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}.json"
                 try:
                     with open(log_filename, 'w') as log_file:
                         json.dump(file_info, log_file, indent=2)
@@ -178,22 +176,22 @@ logger = logging.getLogger(__name__)
         logger.error(f"URI not found: {uri}")
         raise FileNotFoundError(f'`{uri}` is not a URL or a valid local path')'''
 
-    # Заменяем функцию в содержимом
+    # Replace the function in the content
     import re
 
     pattern = r"def _uri_to_blob\(uri: str, \*\*kwargs\) -> bytes:.*?raise FileNotFoundError\(f\'`\{uri\}` is not a URL or a valid local path\'\)"
     content = re.sub(pattern, new_function, content, flags=re.DOTALL)
 
-    # Создаем резервную копию
+    # Create a backup
     backup_path = helper_path + ".backup"
     with open(backup_path, "w") as f:
         f.write(content)
 
-    # Записываем измененный файл
+    # Write the modified file
     with open(helper_path, "w") as f:
         f.write(content)
 
-    print(f"Патч применен успешно. Резервная копия: {backup_path}")
+    print(f"Patch applied successfully. Backup created at: {backup_path}")
 
 
 if __name__ == "__main__":
