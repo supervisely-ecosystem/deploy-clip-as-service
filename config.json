@@ -4,7 +4,7 @@
 	"name": "CLIP Service",
 	"description": "Deploy CLIP (Contrastive Language-Image Pre-Training) model as a microservice for generating high-quality image and text embeddings",
 	"entrypoint": "python run.py",
-	"docker_image": "supervisely/deploy-cas:test",
+	"docker_image": "supervisely/deploy-cas:0.1.0",
 	"port": 8000,
 	"categories": ["system"],
 	"headless": true,
