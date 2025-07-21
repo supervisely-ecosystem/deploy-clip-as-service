@@ -11,3 +11,5 @@ COPY dev_requirements.txt dev_requirements.txt
 RUN pip install --no-cache-dir -r dev_requirements.txt
 
 ENV JINA_HIDE_SURVEY=1
+ENV NO_VERSION_CHECK=1
+ENV JINA_DISABLE_TELEMETRY=1
