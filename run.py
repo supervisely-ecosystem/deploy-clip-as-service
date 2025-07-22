@@ -21,6 +21,10 @@ for line in proc.stdout:
     
     log_levels = ["INFO", "DEBUG", "WARNING", "ERROR"]
 
+    # Skip /dry_run request logs unless DEBUG mode is enabled
+    if log_level != "DEBUG" and "/dry_run" in s:
+        continue
+
     # Check if the message is not empty after the log level
     if any(s.startswith(level) or level in s for level in log_levels):
         # Skip the line if it consists only of the log level and date
