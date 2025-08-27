@@ -1,4 +1,4 @@
-FROM supervisely/base-py-sdk:6.73.350
+FROM pytorch/pytorch:2.7.1-cuda12.8-cudnn9-devel
 
 RUN apt-get update && apt-get install -y wget
 
