@@ -18,5 +18,8 @@
 	"community_agent": false,
 	"restart_policy": "on_error",
 	"task_location": "application_sessions",
-	"only_for_instance_admins": true
+	"only_for_instance_admins": true,
+	"license": {
+		"type": "MIT"
+	}
 }
