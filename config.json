@@ -4,7 +4,7 @@
 	"name": "CLIP Service",
 	"description": "Deploy CLIP (Contrastive Language-Image Pre-Training) model as a microservice for generating high-quality image and text embeddings",
 	"entrypoint": "python run.py",
-	"docker_image": "supervisely/deploy-cas:0.1.2",
+	"docker_image": "supervisely/deploy-cas:0.1.3",
 	"port": 8000,
 	"categories": ["system"],
 	"headless": true,
@@ -13,8 +13,13 @@
 	"poster": "https://github.com/supervisely-ecosystem/embeddings-generator/releases/download/v0.1.0/clip_poster.jpg",
 	"instance_version": "6.12.44",
 	"need_gpu": true,
-	"gpu": "preferred",
+	"gpu": "required",
+	"min_nvidia_driver_version": "550.163.01",
 	"community_agent": false,
 	"restart_policy": "on_error",
-	"task_location": "application_sessions"
+	"task_location": "application_sessions",
+	"only_for_instance_admins": true,
+	"license": {
+		"type": "MIT"
+	}
 }

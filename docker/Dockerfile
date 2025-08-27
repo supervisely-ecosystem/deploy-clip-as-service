@@ -1,10 +1,14 @@
-FROM supervisely/base-py-sdk:6.73.350
+FROM pytorch/pytorch:2.8.0-cuda12.8-cudnn9-runtime
 
 RUN apt-get update && apt-get install -y wget
 
 RUN mkdir -p ~/.cache/clip
 
 RUN wget -O ~/.cache/clip/ViT-B-32.pt "https://huggingface.co/jinaai/clip-models/resolve/main/ViT-B-32.pt"
+
+RUN pip install --upgrade pip 
+
+RUN pip install "pydantic<2.0"
 
 COPY dev_requirements.txt dev_requirements.txt
 
