@@ -1,0 +1,14 @@
+<div>
+    <sly-field
+        title="Compute device"
+        description="Which backend to run the CLIP model on. 'Auto' uses the GPU when one is available and transparently falls back to CPU otherwise — recommended if you just want it to work on any machine. All modes use the same ViT-B/32 model (fp32, 512-D embeddings) with identical preprocessing, so embeddings produced in different modes are fully compatible and can be mixed in the same index/collection without re-indexing.">
+        <sly-icon slot="icon" :options="{ color: '#ff7c49', bgColor: '#fff39b', rounded: false }">
+            <i class="zmdi zmdi-memory"></i>
+        </sly-icon>
+        <el-select v-model="state.deviceMode" style="width: 360px;">
+            <el-option key="auto" label="Auto (GPU if available, else CPU)" value="auto"/>
+            <el-option key="gpu" label="GPU — PyTorch (fastest, needs NVIDIA GPU)" value="gpu"/>
+            <el-option key="cpu" label="CPU — ONNX (fast on CPU, no GPU required)" value="cpu"/>
+        </el-select>
+    </sly-field>
+</div>

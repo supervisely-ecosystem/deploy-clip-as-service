@@ -1,1 +1,1 @@
-python -m clip_server clip.yml
+python run.py

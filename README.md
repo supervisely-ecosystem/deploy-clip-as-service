@@ -24,18 +24,30 @@ The service operates as a background microservice and integrates seamlessly with
 
 ### Key Highlights
 
-- **High Performance**: Leverages NVIDIA GPUs for fast inference and embedding generation.
+- **Runs Anywhere**: Automatically detects available hardware — uses an NVIDIA GPU (PyTorch backend) for fast inference when present, and transparently falls back to a CPU-optimized ONNX backend otherwise. No configuration required.
 - **CLIP Model**: Utilizes the state-of-the-art CLIP model for generating high-quality multimodal embeddings.
 
 **Prerequisites:**
 
 - Supervisely instance with admin access
-- NVIDIA GPU with sufficient VRAM (recommended: 4GB+)
+- NVIDIA GPU with sufficient VRAM (recommended: 4GB+) is optional — the service also runs on CPU via the ONNX backend
+
+### Compute device modes
+
+On launch a modal lets you choose the **Compute device**:
+
+| Mode | Backend | When to use |
+| --- | --- | --- |
+| **Auto** (default) | PyTorch on GPU if available, otherwise ONNX on CPU | Just works on any machine |
+| **GPU** | PyTorch (CUDA) | Force GPU; fastest inference |
+| **CPU** | ONNX Runtime | Machines without a GPU; fast on CPU |
+
+> **Embeddings are interchangeable across all modes.** Every mode runs the exact same model (ViT-B/32, fp32, 512-D) with identical preprocessing — only the inference engine (PyTorch vs ONNX Runtime) differs, which changes the output only at the level of floating-point noise. Because search uses cosine similarity, this has no practical effect on results. You can therefore run different sessions in different modes and **mix their embeddings in the same index/collection — no re-indexing required.**
 
 When launching the service, the application will automatically:
 
 1. **Download CLIP Model**: Pre-trained ViT-B/32 model weights are automatically downloaded during container initialization.
-2. **Initialize GPU**: Automatically detects and utilizes available GPU resources for optimal performance.
+2. **Select Device**: Picks the backend based on the selected mode — GPU (PyTorch) or CPU (ONNX) — with Auto detecting a GPU and falling back to CPU when none is present.
 
 > Note: To use the service, you must change the service's visibility to "Whole Instance" in the service settings. If you forget to do this, you can always change it later in the app session settings.
 

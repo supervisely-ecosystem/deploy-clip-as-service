@@ -14,6 +14,14 @@ COPY dev_requirements.txt dev_requirements.txt
 
 RUN pip install --no-cache-dir -r dev_requirements.txt
 
+# ONNX backend for CPU inference. We intentionally install the CPU build of
+# onnxruntime (NOT onnxruntime-gpu) so it coexists with the CUDA PyTorch base
+# image without CUDA-version conflicts: GPU runs via torch, CPU runs via ONNX.
+# A modern onnxruntime is used because clip-server 0.8.3 pins onnxruntime<=1.13.1
+# which has no wheels for the image's Python; clip-server only uses the stable
+# InferenceSession/session.run API, so a newer runtime is compatible.
+RUN pip install --no-cache-dir onnx "onnxruntime==1.18.1"
+
 ENV JINA_HIDE_SURVEY=1
 ENV NO_VERSION_CHECK=1
 ENV JINA_OPTOUT_TELEMETRY=1

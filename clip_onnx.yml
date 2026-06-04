@@ -1,0 +1,21 @@
+jtype: Flow
+version: '1'
+with:
+  port: 8000
+  protocol: 'http'
+  cors: True
+executors:
+  - name: clip_o
+    uses:
+      jtype: CLIPEncoder
+      with:
+        # Same model/weights and the same clip-server preprocessing as the torch
+        # backend -> embeddings are interchangeable (512-D, fp32). Do NOT switch to
+        # fp16/int8 here, that would break cross-backend vector compatibility.
+        name: ViT-B-32::openai
+        device: cpu
+      metas:
+        py_modules:
+          - clip_server.executors.clip_onnx
+    timeout_ready: 300000
+    replicas: 1
