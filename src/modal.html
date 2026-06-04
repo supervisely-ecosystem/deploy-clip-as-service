@@ -11,4 +11,22 @@
             <el-option key="cpu" label="CPU — ONNX (fast on CPU, no GPU required)" value="cpu"/>
         </el-select>
     </sly-field>
+
+    <el-alert
+        v-if="state.deviceMode !== 'cpu'"
+        type="info"
+        :closable="false"
+        show-icon
+        style="margin-top: 10px;">
+        <span slot="title">
+            GPU requirement: NVIDIA driver <b>&ge; 550.163.01</b> (CUDA 12.8).
+            <template v-if="state.deviceMode === 'auto'">
+                In <b>Auto</b> mode the service falls back to CPU (ONNX) if no compatible GPU/driver is found.
+            </template>
+            <template v-else>
+                In <b>GPU</b> mode an older driver or missing GPU will make the model run on CPU instead.
+            </template>
+            The CPU (ONNX) mode has no driver requirement.
+        </span>
+    </el-alert>
 </div>
