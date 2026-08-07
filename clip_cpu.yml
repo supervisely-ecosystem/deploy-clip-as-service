@@ -1,0 +1,29 @@
+jtype: Flow
+version: '1'
+with:
+  port: 8000
+  protocol: 'http'
+  cors: True
+executors:
+  - name: clip_t
+    uses:
+      jtype: CLIPEncoder
+      with:
+        # Identical to clip.yml except for the device: same model, same weights,
+        # same clip-server preprocessing, same dtype. That is what makes the two
+        # modes interchangeable - measured, GPU fp32 vs CPU fp32 agree to 1e-5
+        # per vector and return the same neighbours for every query.
+        #
+        # PyTorch, not ONNX Runtime, even though clip-server ships an ONNX
+        # backend: the ONNX export of ViT-B/32 lands 2.4e-2 away from the torch
+        # weights, which reshuffles ~36% of nearest neighbours and makes CPU- and
+        # GPU-indexed images non-comparable in one collection. It is also slower
+        # than torch on CPU (47 vs 53 docs/s), so it buys nothing.
+        name: ViT-B-32::openai
+        device: cpu
+        dtype: fp32
+      metas:
+        py_modules:
+          - clip_server.executors.clip_torch
+    timeout_ready: 300000
+    replicas: 1

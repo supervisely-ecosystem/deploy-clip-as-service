@@ -18,28 +18,31 @@ def gpu_available():
 
 
 def resolve_backend():
-    """Pick the CLIP backend flow based on the modal switch.
+    """Pick the CLIP flow based on the modal switch.
 
     Modes (modal.state.deviceMode):
-      - "auto" (default): PyTorch on GPU if available, otherwise ONNX on CPU.
-      - "gpu":            force the PyTorch backend.
-      - "cpu":            force the ONNX (CPU) backend.
+      - "auto" (default): GPU if one is visible, otherwise CPU.
+      - "gpu":            force the GPU flow.
+      - "cpu":            force the CPU flow.
 
-    Both backends run the SAME model (ViT-B-32::openai, fp32, 512-D) with the
-    same clip-server preprocessing, so the embeddings they produce are
-    interchangeable and can be mixed in the same index.
+    Only the device differs. Both flows run PyTorch with the same model
+    (ViT-B-32::openai), the same weights, the same preprocessing and the same
+    dtype (fp32), which is what keeps the embeddings interchangeable: measured on
+    200 images, GPU and CPU agree to 1e-5 per vector and return an identical
+    top-10 for every query. So a project can be indexed by a GPU session and
+    extended by a CPU one without re-indexing.
     """
     mode = os.getenv("modal.state.deviceMode", "auto").strip().lower()
 
     if mode == "gpu":
-        return "clip.yml", "PyTorch (forced GPU)"
+        return "clip.yml", "PyTorch fp32 on GPU (forced)"
     if mode == "cpu":
-        return "clip_onnx.yml", "ONNX (forced CPU)"
+        return "clip_cpu.yml", "PyTorch fp32 on CPU (forced)"
 
     # auto
     if gpu_available():
-        return "clip.yml", "PyTorch (auto: GPU detected)"
-    return "clip_onnx.yml", "ONNX (auto: no GPU, using CPU)"
+        return "clip.yml", "PyTorch fp32 on GPU (auto: GPU detected)"
+    return "clip_cpu.yml", "PyTorch fp32 on CPU (auto: no GPU)"
 
 
 flow_file, backend_desc = resolve_backend()

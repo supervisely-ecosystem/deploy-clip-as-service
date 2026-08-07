@@ -1,4 +1,6 @@
+TAG=${TAG:-test-1.0.0}
+
 cp ../dev_requirements.txt . && \
-docker build --no-cache -t supervisely/deploy-cas:0.2.0 . && \
+docker build --no-cache -t supervisely/deploy-cas:$TAG . && \
 rm dev_requirements.txt && \
-docker push supervisely/deploy-cas:0.2.0
+docker push supervisely/deploy-cas:$TAG

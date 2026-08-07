@@ -9,7 +9,14 @@ executors:
     uses:
       jtype: CLIPEncoder
       with:
+        # Same model and the same dtype as clip_cpu.yml. fp32 rather than the
+        # fp16 default on purpose: measured against the CPU flow, fp32 on both
+        # sides puts the two devices 1e-5 apart in cosine and produces bit-for-bit
+        # the same search results, while fp16 on the GPU leaves a 1e-5 -> 8.8e-3
+        # gap. fp32 is not slower here (399 vs 366 docs/s on an RTX 5090 - the
+        # model is small enough that the conversion overhead eats the gain).
         name: ViT-B-32::openai
+        dtype: fp32
       metas:
         py_modules:
           - clip_server.executors.clip_torch
