@@ -39,17 +39,19 @@ On launch a modal lets you choose the **Compute device**:
 | Mode | Device | When to use | NVIDIA driver |
 | --- | --- | --- | --- |
 | **Auto** (default) | GPU if available, otherwise CPU | Just works on any machine | ≥ 550.163.01 to use the GPU; otherwise falls back to CPU |
-| **GPU** | CUDA | Force GPU; ~7x faster | ≥ 550.163.01 required (older/missing → runs on CPU) |
+| **GPU** | CUDA | Force GPU; fastest inference | ≥ 550.163.01 required (older/missing → runs on CPU) |
 | **CPU** | CPU | Machines without a GPU | none |
 
 Both modes run **PyTorch with the same weights, the same preprocessing and the same dtype (fp32)** — only the device differs. Measured on 200 images: the two devices agree to `1e-5` per vector and return an **identical top-10 for every query**, from either side of the query. So a project indexed by a GPU session can be extended by a CPU session and vice versa — **mixed collections are safe, no re-indexing required.**
 
-Throughput, for planning (RTX 5090 / 32-core CPU, 200 images, best of three):
+Throughput, for planning (RTX 5090 / 32-core CPU, 200 documents, best of three):
 
 | Device | Images | Texts | Single-image latency |
 | --- | --- | --- | --- |
 | GPU | 399 docs/s | 496 docs/s | 13 ms |
 | CPU | 52 docs/s | 71 docs/s | 50 ms |
+
+On this hardware that is ~7x on batch throughput but only ~4x on a single request — the GPU gap narrows when requests arrive one at a time, and widens on a weaker CPU. Measure on your own machine before sizing anything on these numbers.
 
 > **Driver requirement.** GPU acceleration uses a CUDA 12.8 runtime, which needs **NVIDIA driver ≥ 550.163.01**. In **Auto** mode an older driver or missing GPU simply triggers a transparent fallback to the CPU. The modal shows this note for the **Auto** and **GPU** modes only.
 

@@ -1,46 +1,14 @@
 <div>
     <sly-field
         title="Compute device"
-        description="Which device to run the CLIP model on. 'Auto' uses the GPU when one is available and falls back to CPU otherwise — recommended if you just want it to work on any machine. All modes run the same model (ViT-B/32, PyTorch, fp32, 512-D embeddings) with identical preprocessing, so the vectors produced in different modes are interchangeable: a project indexed by a GPU session can be extended by a CPU one without re-indexing.">
+        description="Where to run CLIP. All modes use the same model and produce interchangeable embeddings, so a project indexed on one device can be extended on the other without re-indexing.">
         <sly-icon slot="icon" :options="{ color: '#ff7c49', bgColor: '#fff39b', rounded: false }">
             <i class="zmdi zmdi-memory"></i>
         </sly-icon>
-        <el-select v-model="state.deviceMode" style="width: 360px;">
-            <el-option key="auto" label="Auto (GPU if available, else CPU)" value="auto"/>
-            <el-option key="gpu" label="GPU (fastest, needs an NVIDIA GPU)" value="gpu"/>
-            <el-option key="cpu" label="CPU (no GPU required, ~7x slower)" value="cpu"/>
+        <el-select v-model="state.deviceMode" style="width: 440px;">
+            <el-option key="auto" label="Auto — GPU if available, otherwise CPU" value="auto"/>
+            <el-option key="gpu" label="GPU — fastest, needs NVIDIA driver ≥ 550.163.01" value="gpu"/>
+            <el-option key="cpu" label="CPU — no GPU or driver required, slower" value="cpu"/>
         </el-select>
     </sly-field>
-
-    <el-alert
-        v-if="state.deviceMode !== 'cpu'"
-        type="info"
-        :closable="false"
-        show-icon
-        style="margin-top: 10px;">
-        <span slot="title">
-            GPU requirement: NVIDIA driver <b>&ge; 550.163.01</b> (CUDA 12.8).
-            <template v-if="state.deviceMode === 'auto'">
-                In <b>Auto</b> mode an older driver or a machine without a GPU simply falls back to CPU.
-            </template>
-            <template v-else>
-                In <b>GPU</b> mode an older driver or missing GPU will make the model run on CPU instead.
-            </template>
-            CPU mode has no driver requirement.
-        </span>
-    </el-alert>
-
-    <el-alert
-        type="info"
-        :closable="false"
-        show-icon
-        style="margin-top: 10px;">
-        <span slot="title">
-            Both modes run in <b>fp32</b>. Versions up to <b>0.1.3</b> ran the GPU in fp16; vectors
-            from those sessions differ from fp32 ones by ~1e-5 in cosine, which reshuffles only
-            already-tied neighbours (measured: 1–2 changed top-1 hits per 200 queries) — mixing them
-            in one collection is safe and no re-indexing is needed. If you specifically need the old
-            fp16 GPU behaviour, run app version <b>0.1.3</b>.
-        </span>
-    </el-alert>
 </div>
