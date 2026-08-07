@@ -1,0 +1,14 @@
+<div>
+    <sly-field
+        title="Compute device"
+        description="Where to run CLIP. All modes use the same model and produce interchangeable embeddings, so a project indexed on one device can be extended on the other without re-indexing.">
+        <sly-icon slot="icon" :options="{ color: '#ff7c49', bgColor: '#fff39b', rounded: false }">
+            <i class="zmdi zmdi-memory"></i>
+        </sly-icon>
+        <el-select v-model="state.deviceMode" style="width: 440px;">
+            <el-option key="auto" label="Auto — GPU if available, otherwise CPU" value="auto"/>
+            <el-option key="gpu" label="GPU — fastest, needs NVIDIA driver ≥ 550.163.01" value="gpu"/>
+            <el-option key="cpu" label="CPU — no GPU or driver required, slower" value="cpu"/>
+        </el-select>
+    </sly-field>
+</div>
