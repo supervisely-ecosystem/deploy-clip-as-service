@@ -1,4 +1,4 @@
-TAG=${TAG:-test-1.0.0}
+TAG=${TAG:-test-1.0.1}
 
 cp ../dev_requirements.txt . && \
 docker build --no-cache -t supervisely/deploy-cas:$TAG . && \

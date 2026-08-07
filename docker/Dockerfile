@@ -167,6 +167,23 @@ RUN /usr/local/bin/pip3 uninstall -y setuptools wheel
 COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder /opt/clip-cache /root/.cache/clip
 
+# These two are what makes GPU mode work under the Supervisely agent, and they
+# are easy to lose when moving off a CUDA base image - pytorch/pytorch:*-cuda*
+# set them, python:*-slim does not.
+#
+# The agent starts task containers with `--runtime=nvidia` and no --gpus flag,
+# so no DeviceRequests are set and the legacy nvidia-container-runtime hook
+# decides what to inject purely from NVIDIA_VISIBLE_DEVICES in the container
+# environment. Without it the hook injects nothing: no /dev/nvidia*, no driver
+# libraries, torch.cuda.is_available() is False and Auto mode silently falls
+# back to CPU on a machine that has a perfectly good GPU.
+#
+# Testing with `docker run --gpus all` does NOT catch this - that sets
+# DeviceRequests explicitly and bypasses the variable. Verify GPU mode through
+# an actual agent task, or with `--runtime=nvidia` and no --gpus.
+ENV NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
 ENV PATH="/opt/venv/bin:${PATH}" \
     HOME=/root \
     PYTHONUNBUFFERED=1 \
